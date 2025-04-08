@@ -13,7 +13,15 @@ export async function createTaskController(req: Request, res: Response): Promise
 		res.status(201).json(result); 
 
 	} catch (error: any) {
-		const status = error.statusCode || 500;
-		res.status(status).json({ message: error.message });
+		res.status(400).json({ message: error.message });
+	}
+}
+
+export async function getTasksController(req: Request, res: Response): Promise<void> {
+	try {
+		const result = await service.getAllTasks();
+		res.status(200).json(result);
+	} catch (error: any) {
+		res.status(500).json({ message: error.message });
 	}
 }

@@ -4,7 +4,7 @@ import { Task } from "../models/task.model"
 import { CreateTaskDTO } from "../dtos/task.dto";
 import { v4 as uuidv4 } from "uuid";
 
-const repository = new TaskRepository();
+// const repository = new TaskRepository();
 
 export class TaskService {
 	constructor(private repository: TaskRepository) { }
@@ -23,5 +23,9 @@ export class TaskService {
 		};
 
 		return await this.repository.create(newTask);
+	}
+
+	async getAllTasks(): Promise<Task[]>{
+		return await this.repository.findAll()
 	}
 }

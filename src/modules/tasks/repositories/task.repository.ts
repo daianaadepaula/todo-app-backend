@@ -6,4 +6,7 @@ export class TaskRepository {
 	 	tasks.push(task)
 		return task
 	}
+	async findAll(): Promise<Task[]>{
+		return tasks // retorna a lista em memória
+	}
 }
