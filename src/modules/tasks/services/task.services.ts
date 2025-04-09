@@ -28,4 +28,19 @@ export class TaskService {
 	async getAllTasks(): Promise<Task[]>{
 		return await this.repository.findAll()
 	}
+
+	async updateTask(id: string, data: CreateTaskDTO): Promise<Task> {
+		const errors = validateTaskInput(data);
+		if (errors.length > 0) {
+			throw new Error(errors.join(", "));
+		}
+
+		const update = await this.repository.updateTask(id, data);
+
+		if (!update){
+			throw new Error("Task not found");
+		}
+
+		return update;
+	}
 }

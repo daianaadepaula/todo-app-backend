@@ -12,7 +12,7 @@ content-type: application/json
 
 ###
 
-POST http://localhost:3333/tasks
+PUT  http://localhost:3333/tasks/05890daa-b25b-475f-9cf2-ed5dcc59f03e
 content-type: application/json
 
 {
