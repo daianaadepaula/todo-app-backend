@@ -3,6 +3,7 @@ import { validateTaskInput } from "../validators/task.validator"
 import { Task } from "../models/task.model"
 import { CreateTaskDTO } from "../dtos/task.dto";
 import { v4 as uuidv4 } from "uuid";
+import { tasks } from './../database/task.memory';
 
 // const repository = new TaskRepository();
 
@@ -25,7 +26,7 @@ export class TaskService {
 		return await this.repository.create(newTask);
 	}
 
-	async getAllTasks(): Promise<Task[]>{
+	async getAllTasks(): Promise<Task[]> {
 		return await this.repository.findAll()
 	}
 
@@ -37,10 +38,19 @@ export class TaskService {
 
 		const update = await this.repository.updateTask(id, data);
 
-		if (!update){
+		if (!update) {
 			throw new Error("Task not found");
 		}
 
 		return update;
 	}
+
+	async updateTaskStatus(id: string, completed: boolean) {
+		const taskUpdateStatus = await this.repository.updateStatus(id, completed)
+
+		if (!taskUpdateStatus) throw new Error("Task not found");
+
+		return taskUpdateStatus;
+	}
 }
+	

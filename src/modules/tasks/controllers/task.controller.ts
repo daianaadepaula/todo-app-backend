@@ -37,3 +37,16 @@ export async function updateTaskController(req: Request, res: Response): Promise
 		res.status(400).json({ message: error.message })
 	}
 }
+
+
+export async function updateTaskStatusController(req: Request, res: Response): Promise<void> {
+	try {
+		const { id } = req.params;
+		const { completed } = req.body;
+
+		const result = await service.updateTaskStatus(id, completed);
+		res.status(200).json(result);
+	} catch (error: any) {
+		res.status(400).json({ message: error.message })
+	}
+}

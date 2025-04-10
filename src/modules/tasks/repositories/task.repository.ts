@@ -20,4 +20,13 @@ export class TaskRepository {
 
 		return task;
 	} 
+
+	async updateStatus(id: string, completed: boolean): Promise<Task | null>{
+		const taskIndex = tasks.findIndex((task) => task.id === id);
+
+		if (taskIndex === -1) return null;
+
+		tasks[taskIndex].completed = completed;
+		return tasks[taskIndex];
+	} 
 }

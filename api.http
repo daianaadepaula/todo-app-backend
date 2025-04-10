@@ -1,8 +1,11 @@
-GET http://localhost:3333/tasks
+@baseUrl = http://localhost:3333
+
+GET {{baseUrl}}/tasks
 
 ###
 
-POST http://localhost:3333/tasks
+# @name createTask
+POST {{baseUrl}}/tasks
 content-type: application/json
 
 {
@@ -12,11 +15,24 @@ content-type: application/json
 
 ###
 
-PUT  http://localhost:3333/tasks/05890daa-b25b-475f-9cf2-ed5dcc59f03e
+@taskId = {{createTask.response.body.$.id}}
+
+###
+
+PUT  {{baseUrl}}/tasks/{{taskId}}
 content-type: application/json
 
 {
   "title": "Estudar programação",
   "description": "Estudar promises em node.js"
+}
+
+###
+
+PATCH   {{baseUrl}}/tasks/{{taskId}}/completed
+content-type: application/json
+
+{
+  "completed": true
 }
 
