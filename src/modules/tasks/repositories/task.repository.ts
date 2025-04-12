@@ -6,24 +6,25 @@ export class TaskRepository {
 		tasks.push(task)
 		return task
 	}
+
 	async findAll(): Promise<Task[]> {
-		return tasks // retorna a lista em memória
+		return [...tasks] // retorna uma cópia imutabilidade
 	}
 
-	async update(id: string, data: { title: string, description: string }): Promise<Task | null> {
-		const task = tasks.find((task) => task.id === id);
-
+	async update(id: string, data: Pick<Task, "title" | "description">): Promise<Task | null> {
+		const task = tasks.find(t => t.id === id);
 		if (!task) return null;
 
-		task.title = data.title;
-		task.description = data.description;
+		Object.assign(task, {
+			title: data.title,
+			description: data.description,
+		})
 
 		return task;
 	}
 
 	async updateStatus(id: string, completed: boolean): Promise<Task | null> {
-		const taskIndex = tasks.findIndex((task) => task.id === id);
-
+		const taskIndex = tasks.findIndex(t => t.id === id);
 		if (taskIndex === -1) return null;
 
 		tasks[taskIndex].completed = completed;
@@ -31,8 +32,7 @@ export class TaskRepository {
 	}
 
 	async delete(id: string): Promise<Task | null> {
-		const taskIndex = tasks.findIndex((task) => task.id === id);
-
+		const taskIndex = tasks.findIndex(t => t.id === id);
 		if (taskIndex === -1) return null;
 
 		const deletedTask = tasks[taskIndex];

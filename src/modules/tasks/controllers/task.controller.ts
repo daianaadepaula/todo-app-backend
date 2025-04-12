@@ -3,13 +3,11 @@ import { TaskService } from "../services/task.services"
 import { CreateTaskDTO } from "../dtos/task.dto";
 import { TaskRepository } from "../repositories/task.repository";
 
-const repository = new TaskRepository();
-const service = new TaskService(repository);
+const service = new TaskService(new TaskRepository());
 
 export async function createTaskController(req: Request, res: Response): Promise<void> {
 	try {
-		const data: CreateTaskDTO = req.body;
-		const result = await service.createTask(data);
+		const result = await service.createTask(req.body as CreateTaskDTO);
 		res.status(201).json(result);
 
 	} catch (error: any) {
@@ -29,9 +27,8 @@ export async function getTasksController(req: Request, res: Response): Promise<v
 export async function updateTaskController(req: Request, res: Response): Promise<void> {
 	try {
 		const { id } = req.params;
-		const data: CreateTaskDTO = req.body;
+		const update = await service.updateTask(id, req.body);
 
-		const update = await service.updateTask(id, data);
 		res.status(200).json(update);
 	} catch (error: any) {
 		res.status(400).json({ message: error.message })

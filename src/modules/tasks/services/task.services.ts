@@ -3,7 +3,6 @@ import { createTaskSchema, updateTaskSchema } from "../validators/task.schema"
 import { Task } from "../models/task.model"
 import { CreateTaskDTO } from "../dtos/task.dto";
 import { v4 as uuidv4 } from "uuid";
-import { z } from "zod"
 
 export class TaskService {
 	constructor(private repository: TaskRepository) { }
@@ -48,7 +47,6 @@ export class TaskService {
 
 	async updateTaskStatus(id: string, completed: boolean) {
 		const taskUpdateStatus = await this.repository.updateStatus(id, completed)
-
 		if (!taskUpdateStatus) throw new Error("Task not found");
 
 		return taskUpdateStatus;
@@ -56,7 +54,6 @@ export class TaskService {
 
 	async deleteTask(id: string): Promise<Task> {
 		const deleted = await this.repository.delete(id)
-
 		if (!deleted) throw new Error("Task not found");
 
 		return deleted;
