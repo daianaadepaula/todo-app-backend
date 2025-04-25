@@ -1,25 +1,23 @@
 import { TaskRepository } from "../repositories/task.repository"
-import { validateTaskInput } from "../validators/task.validator"
+import { createTaskSchema, updateTaskSchema } from "../validators/task.schema"
 import { Task } from "../models/task.model"
 import { CreateTaskDTO } from "../dtos/task.dto";
 import { v4 as uuidv4 } from "uuid";
-import { tasks } from './../database/task.memory';
-
-// const repository = new TaskRepository();
+import { z } from "zod"
 
 export class TaskService {
 	constructor(private repository: TaskRepository) { }
 
 	async createTask(data: CreateTaskDTO): Promise<Task> {
-		const errors = validateTaskInput(data);
-		if (errors.length > 0) {
-			throw new Error(errors.join(", "));
+		const result = createTaskSchema.safeParse(data);
+		if (!result.success) {
+			throw new Error(result.error.errors.map((e) => e.message).join(", "));
 		}
 
 		const newTask: Task = {
 			id: uuidv4(),
-			title: data.title,
-			description: data.description,
+			title: result.data.title,
+			description: result.data.description ?? "",
 			completed: false,
 		};
 
@@ -30,13 +28,16 @@ export class TaskService {
 		return await this.repository.findAll()
 	}
 
-	async updateTask(id: string, data: CreateTaskDTO): Promise<Task> {
-		const errors = validateTaskInput(data);
-		if (errors.length > 0) {
-			throw new Error(errors.join(", "));
+	async updateTask(id: string, data: Partial<CreateTaskDTO>): Promise<Task> {
+		const result = updateTaskSchema.safeParse(data);
+		if (!result.success) {
+			throw new Error(result.error.errors.map((e) => e.message).join(", "));
 		}
 
-		const update = await this.repository.updateTask(id, data);
+		const update = await this.repository.update(id, {
+			title: result.data.title ?? "",
+			description: result.data.description ?? "",
+		});
 
 		if (!update) {
 			throw new Error("Task not found");
@@ -52,5 +53,13 @@ export class TaskService {
 
 		return taskUpdateStatus;
 	}
+
+	async deleteTask(id: string): Promise<Task> {
+		const deleted = await this.repository.delete(id)
+
+		if (!deleted) throw new Error("Task not found");
+
+		return deleted;
+	}
 }
-	
+

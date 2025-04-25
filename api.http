@@ -36,3 +36,6 @@ content-type: application/json
   "completed": true
 }
 
+###
+
+DELETE {{baseUrl}}/tasks/{{taskId}}

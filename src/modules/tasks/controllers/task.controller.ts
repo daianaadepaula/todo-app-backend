@@ -50,3 +50,13 @@ export async function updateTaskStatusController(req: Request, res: Response): P
 		res.status(400).json({ message: error.message })
 	}
 }
+
+export async function deleteTaskController(req: Request, res: Response): Promise<void> {
+	try {
+		const { id } = req.params
+		const deletedTask = await service.deleteTask(id);
+		res.status(200).json({ message: `Task '${deletedTask.title}' deleted successfully` });
+	} catch (error: any) {
+		res.status(400).json({ message: error.message })
+	}
+}
